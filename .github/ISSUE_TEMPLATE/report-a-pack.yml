@@ -1,0 +1,30 @@
+name: Report a pack
+description: A listed pack that doesn't work, doesn't look like its preview, or shouldn't be listed.
+labels: ["report"]
+body:
+  - type: input
+    id: pack
+    attributes:
+      label: Pack
+      description: Its id or name, as listed.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What's wrong
+      options:
+        - It doesn't install or doesn't show
+        - It doesn't look like its preview
+        - Rights (license, art, fonts, likeness)
+        - Content or safety
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What you saw. For a rights problem, say what's yours or whose it is. Never include passwords or other secrets.
+    validations:
+      required: true

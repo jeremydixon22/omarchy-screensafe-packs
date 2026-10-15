@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Share a pack
+    url: https://github.com/jeremydixon22/omarchy-screensafe-packs/blob/main/CONTRIBUTING.md
+    about: Packs are listed by pull request; this explains how.
+  - name: A problem with ScreenSafe itself
+    url: https://github.com/jeremydixon22/omarchy-screensafe/issues
+    about: Bugs and ideas for the plugin go to its own repository.
+  - name: A security problem
+    url: https://github.com/jeremydixon22/omarchy-screensafe/security/advisories/new
+    about: Report it privately.

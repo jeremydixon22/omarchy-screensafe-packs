@@ -1,0 +1,21 @@
+# The ScreenSafe pack catalog: one [[pack]] per listed pack, in order of `id`.
+#
+# This is the only file edited by hand. README.md and packs/<id>.md are generated from it by
+# `python3 scripts/catalog.py generate`. See CONTRIBUTING.md to add a pack. An entry looks like this:
+#
+# [[pack]]
+# id = "aquarium"                    # unique here; also the folder it installs as
+# name = "Aquarium"                  # exactly the pack's own `name`
+# author = "Jane Doe"
+# contact = "https://github.com/janedoe"
+# repository = "https://github.com/janedoe/omarchy-aquarium"
+# path = "."                         # the pack's folder within the repository: "." or, say, "screensafe"
+# commit = "4f1c…"                   # the full 40-character commit approved
+# license = "CC-BY-4.0"              # CC0-1.0, CC-BY-4.0 or MIT; the pack's own `license` must match
+# preview = "preview.png"            # in the pack's folder, at that commit; rendered with `screensafe render`
+# description = "Fish drift past swaying weed and rising bubbles."   # exactly the pack's own `description`
+# format = 1
+# added = 2026-11-02
+# provenance = """
+# All art drawn by the author in Aseprite. No generated material, no photographs, no likenesses.
+# """

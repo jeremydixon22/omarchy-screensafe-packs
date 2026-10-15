@@ -1,0 +1,74 @@
+name: Catalog
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  entries:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check every entry, and that the pages are up to date
+        run: python3 scripts/catalog.py check
+
+  packs:
+    needs: entries
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: What this pull request adds or changes
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$BASE/packs.toml" -o "$RUNNER_TEMP/base.toml" || true
+          python3 scripts/catalog.py changes "$RUNNER_TEMP/base.toml" >> "$GITHUB_STEP_SUMMARY"
+      - name: Fetch each pack as an install does, and check it with ScreenSafe's renderer
+        env:
+          SCREENSAFE_RENDERER_CACHE: ${{ runner.temp }}/renderer
+          SCREENSAFE_FRAMES: ${{ github.event_name == 'pull_request' && format('{0}/frames', runner.temp) || '' }}
+        run: python3 scripts/catalog.py verify
+      - name: Frames from across each pack, beside its preview, for review
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: frames
+          path: ${{ runner.temp }}/frames
+          if-no-files-found: ignore
+          retention-days: 30
+
+  report:
+    # A listed pack that no longer passes, found by the weekly check, is flagged for its maker and the maintainer.
+    needs: packs
+    if: failure() && github.event_name == 'schedule'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Open an issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "A listed pack no longer passes its weekly check" \
+            --body "The weekly check of every listed pack failed: $RUN. A pack that isn't fixed within 30 days is delisted."
