@@ -40,7 +40,7 @@ PACKS_DIR = "~/.config/omarchy/screensafe/packs"
 
 # The renderer packs are checked with: ScreenSafe's own binaries, at a pinned commit of the plugin, by their digests.
 RENDERER = {
-    "commit": "230bb0fe7e9c2bb2b6926ac682071bdc7dc74fb2",
+    "commit": "420eaa89d0878ddaef6e8163be6e73ed6e8e1dd3",
     "x86_64": "af9a3d8d7eeff56d1b87d24d86d5b5f47e3ee146bce9fcdf3082a2709899a4ce",
     "aarch64": "0040294ec26e72925d93a79852789b1bdad4b1a94b3c8d2c55972b87fc23303f",
 }
