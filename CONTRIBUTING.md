@@ -45,7 +45,9 @@ python3 scripts/catalog.py verify your-pack-id
 
 ## 4. Review
 
-The checks run on your pull request. A maintainer then looks at:
+Every entry and generated page is checked on your pull request; the renderer checks only entries it adds or changes.
+If the checker or workflow changes, all packs are verified instead. Pushes to `main`, the weekly check and manual
+runs also verify every listed pack. A maintainer then looks at:
 
 - **rights:** the license, where every image, font or likeness comes from (including generated material), and any
   trademarks. Likenesses of real people need their consent;

@@ -5,6 +5,8 @@
     python3 scripts/catalog.py check               # check every entry, and that the pages are up to date
     python3 scripts/catalog.py verify [ID ...]     # fetch each pack as an install does, and check its files and
                                                    # the pack itself with ScreenSafe's renderer (all, if no IDs)
+    python3 scripts/catalog.py verify --changed-from BASE.toml
+                                                   # verify only added or changed entries, compared with BASE.toml
     python3 scripts/catalog.py changes BASE.toml   # what a pull request adds or changes, against packs.toml before it
 
 With SCREENSAFE_FRAMES set to a folder, `verify` also renders frames from across each pack's loop there, beside its
@@ -535,6 +537,25 @@ def fetch_ok(url):
         return False
 
 
+# ---- selecting entries for a pull request
+
+def changed_packs(packs, base_path):
+    """Select added or changed entries, refusing an unreadable or invalid baseline."""
+    try:
+        base = tomllib.loads(Path(base_path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as err:
+        raise Problem(f"can't read base catalog: {err}") from err
+    previous = base.get("pack", [])
+    if (set(base) - {"pack", "delisted"} or not isinstance(previous, list)
+            or any(not isinstance(e, dict) for e in previous)):
+        raise Problem("invalid base catalog: expected [[pack]] entries")
+    problems = check_all(previous)
+    if problems:
+        raise Problem("invalid base catalog: " + "; ".join(problems))
+    before = {e["id"]: e for e in previous}
+    return [e for e in packs if before.get(e.get("id")) != e]
+
+
 # ---- commands
 
 def main(argv):
@@ -569,18 +590,33 @@ def main(argv):
         print(f"{len(packs)} entr{'y' if len(packs) == 1 else 'ies'}, all well formed; pages up to date")
         return 0
     if cmd == "verify":
-        wanted = set(argv[2:])
-        chosen = [e for e in packs if not wanted or e.get("id") in wanted]
-        missing = wanted - {e.get("id") for e in packs}
-        if missing:
-            print(f"not in packs.toml: {', '.join(sorted(missing))}", file=sys.stderr)
-            return 1
+        changed_only = argv[2:3] == ["--changed-from"]
+        if changed_only:
+            if len(argv) != 4:
+                print("usage: catalog.py verify --changed-from BASE.toml", file=sys.stderr)
+                return 2
+            try:
+                chosen = changed_packs(packs, argv[3])
+            except Problem as p:
+                print(p, file=sys.stderr)
+                return 1
+        else:
+            wanted = set(argv[2:])
+            chosen = [e for e in packs if not wanted or e.get("id") in wanted]
+            missing = wanted - {e.get("id") for e in packs}
+            if missing:
+                print(f"not in packs.toml: {', '.join(sorted(missing))}", file=sys.stderr)
+                return 1
         problems = check_all(chosen)
         if problems:
             print("\n".join(problems), file=sys.stderr)
             return 1
+        if not chosen:
+            print("No added or changed packs to verify." if changed_only else "No packs to verify.")
+            return 0
+        print("Verifying: " + ", ".join(e["id"] for e in chosen))
         failed = 0
-        binary = renderer() if chosen else None
+        binary = renderer()
         for e in chosen:
             try:
                 results, files = verify(e, binary)

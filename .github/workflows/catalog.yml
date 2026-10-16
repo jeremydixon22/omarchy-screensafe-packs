@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Test pack selection
+        run: python3 -m unittest discover -s tests -v
       - name: Check every entry, and that the pages are up to date
         run: python3 scripts/catalog.py check
 
@@ -35,17 +37,30 @@ jobs:
         with:
           persist-credentials: false
       - name: What this pull request adds or changes
+        id: changes
         if: github.event_name == 'pull_request'
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
         run: |
-          curl -fsSL "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$BASE/packs.toml" -o "$RUNNER_TEMP/base.toml" || true
+          git fetch --no-tags --depth=1 origin "$BASE"
+          git show "$BASE:packs.toml" > "$RUNNER_TEMP/base.toml"
           python3 scripts/catalog.py changes "$RUNNER_TEMP/base.toml" >> "$GITHUB_STEP_SUMMARY"
-      - name: Fetch each pack as an install does, and check it with ScreenSafe's renderer
+          if ! git diff --quiet "$BASE" HEAD -- scripts/ .github/workflows/catalog.yml; then
+            echo "check_all=true" >> "$GITHUB_OUTPUT"
+            echo "Checker or workflow changed; verifying every pack." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Fetch and verify submitted packs (all packs outside a pull request)
         env:
           SCREENSAFE_RENDERER_CACHE: ${{ runner.temp }}/renderer
           SCREENSAFE_FRAMES: ${{ github.event_name == 'pull_request' && format('{0}/frames', runner.temp) || '' }}
-        run: python3 scripts/catalog.py verify
+          PR_BASE: ${{ github.event_name == 'pull_request' && format('{0}/base.toml', runner.temp) || '' }}
+          CHECK_ALL: ${{ steps.changes.outputs.check_all }}
+        run: |
+          if [ -n "$PR_BASE" ] && [ "$CHECK_ALL" != true ]; then
+            python3 scripts/catalog.py verify --changed-from "$PR_BASE"
+          else
+            python3 scripts/catalog.py verify
+          fi
       - name: Frames from across each pack, beside its preview, for review
         if: github.event_name == 'pull_request' && always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
