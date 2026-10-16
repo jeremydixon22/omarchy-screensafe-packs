@@ -19,3 +19,22 @@
 # provenance = """
 # All art drawn by the author in Aseprite. No generated material, no photographs, no likenesses.
 # """
+
+[[pack]]
+id = "laser-code"
+name = "Laser Code"
+author = "Brian Lawes"
+contact = "https://github.com/blawes"
+repository = "https://github.com/blawes/omarchy-laser-code"
+path = "."
+commit = "d902b19506d74301d5b48e5493762a7c161a8707"
+license = "CC0-1.0"
+preview = "preview.png"
+description = "Warp-speed flight through columns of falling green code in Katakana and ancient scripts."
+format = 1
+added = 2026-10-16
+provenance = """
+glyphs.png was rendered by script from the Noto fonts (SIL Open Font License): Noto Sans CJK JP (Katakana), Noto Sans \
+Runic, Phoenician, Linear A, Linear B, Old Persian and Cuneiform. Everything else is drawn by the pack's expressions. \
+preview.png is a frame from `screensafe render`. No generated imagery, no photographs, no likenesses.
+"""

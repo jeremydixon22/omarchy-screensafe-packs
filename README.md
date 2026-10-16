@@ -11,10 +11,22 @@
 
 <!-- Generated from packs.toml by scripts/catalog.py; edit packs.toml, not this page. -->
 
-## No packs yet
+## 1 pack
 
-The catalog has just opened, and the first listing could be yours. ScreenSafe comes with
-[fifteen packs of its own](https://github.com/jeremydixon22/omarchy-screensafe#the-packs) in the meantime.
+Pick one to see it, and copy the one line that installs it.
+
+| | | |
+|:---:|:---:|:---:|
+| <a href="packs/laser-code.md"><img src="https://raw.githubusercontent.com/blawes/omarchy-laser-code/d902b19506d74301d5b48e5493762a7c161a8707/preview.png" alt="Laser Code" width="280"></a><br><a href="packs/laser-code.md"><b>Laser Code</b></a><br><sub>by Brian Lawes</sub> |  |  |
+
+<details>
+<summary><b>All packs, as a list</b></summary>
+
+| Pack | By | License | Added |
+|---|---|---|---|
+| [Laser Code](packs/laser-code.md) | Brian Lawes | CC0-1.0 | 2026-10-16 |
+
+</details>
 
 ## How it works
 
