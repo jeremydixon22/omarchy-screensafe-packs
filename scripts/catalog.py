@@ -47,7 +47,7 @@ LEGACY_RENDERER = {
 }
 
 RENDERER = {
-    "commit": "10c2451ea2a28ef943a4561f16bc82d6b4b83723",
+    "commit": "7e5219d655d50a724e4430f3b9e399b5282afaef",
     "x86_64": "9e4065fd3bc48d8aa28e385c0a6c962d45b555bb560c0103718be3697f915d03",
     "aarch64": "f4656c8c7358595895ddb2043da8e5c2381d1c97e5a695c9fc8ac262fd20425b",
 }
