@@ -11,6 +11,7 @@ Warp-speed flight through columns of falling green code in Katakana and ancient 
 | **By** | [Brian Lawes](https://github.com/blawes) |
 | **License** | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
 | **Source** | [blawes/omarchy-laser-code](https://github.com/blawes/omarchy-laser-code/tree/d902b19506d74301d5b48e5493762a7c161a8707) at `d902b19506d7` |
+| **Needs** | ScreenSafe 0.4.8 or later |
 | **Listed** | 2026-10-16 |
 
 ## Install

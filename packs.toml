@@ -14,7 +14,7 @@
 # license = "CC-BY-4.0"              # CC0-1.0, CC-BY-4.0 or MIT; the pack's own `license` must match
 # preview = "preview.png"            # in the pack's folder, at that commit; rendered with `screensafe render`
 # description = "Fish drift past swaying weed and rising bubbles."   # exactly the pack's own `description`
-# format = 1
+# format = 1                        # the pack's own: 1, or 2 for ScreenSafe 0.6.0 color controls; shown as the version it needs
 # added = 2026-11-02
 # provenance = """
 # All art drawn by the author in Aseprite. No generated material, no photographs, no likenesses.

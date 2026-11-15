@@ -12,6 +12,12 @@ public so makers know what to expect.
 - **Only what's true and verified.** A review says what was checked and what wasn't. Passing the checks is not a
   claim that a pack is flawless.
 
+## ScreenSafe 0.6.0 checks
+
+Verify with the catalog's pinned release renderer, and confirm the entry's format matches the manifest. Format 1 keeps its 0.4.8 minimum; color settings and `colorize` need format 2 and are advertised as 0.6.0. Check exposed choices and contrast in light/dark themes. Prepared playback is a local user option and never a reason to accept expensive or flashing live output. Do not accept cached media/approvals or a layout that depends on personal video: this catalog has no broker-aware media fixtures yet.
+
+A checker pass describes the measured segment and the implemented approximate flash policy. It is not medical certification. State the checked duration and sizes; do not describe an untested hour-long pack as a whole-loop pass.
+
 ## Updates
 
 An update is reviewed like a new listing, but only for what changed: the checks list the files that changed between

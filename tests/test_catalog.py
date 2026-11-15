@@ -123,5 +123,30 @@ class PackSelection(unittest.TestCase):
         verify.assert_not_called()
 
 
+class FormatCompatibility(unittest.TestCase):
+    def test_formats_have_explicit_published_release_requirements(self):
+        self.assertEqual(catalog.needs(entry("old")), "ScreenSafe 0.4.8 or later")
+        self.assertEqual(catalog.needs(entry("new", format=2)), "ScreenSafe 0.6.0 or later")
+        self.assertEqual(catalog.check_entry(entry("new", format=2)), [])
+        for value in [True, False, 1.0, 3, "2"]:
+            with self.subTest(value=value):
+                self.assertTrue(any("format" in p for p in catalog.check_entry(entry("bad", format=value))))
+
+    def test_mislabeled_format_or_unreviewed_video_layout_never_runs_renderer(self):
+        manifests = [
+            (b'format=2\nname="Pack"\nlicense="MIT"\ndescription="A screensaver."', 1, "format must match"),
+            (b'format=2\nname="Pack"\nlicense="MIT"\ndescription="A screensaver."\n[[scene]]\n[[scene.draw]]\nsource="videos"', 2, "broker-aware"),
+        ]
+        for manifest, form, message in manifests:
+            with self.subTest(form=form, message=message):
+                files = {"screensafe.toml": manifest, "preview.png": b"fixture", "LICENSE": b"MIT"}
+                with patch.object(catalog, "fetch", return_value=b"archive"), \
+                     patch.object(catalog, "extract", return_value=files), \
+                     patch.object(catalog.subprocess, "run") as run:
+                    with self.assertRaisesRegex(catalog.Problem, message):
+                        catalog.verify(entry("pack", format=form), "renderer")
+                    run.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()

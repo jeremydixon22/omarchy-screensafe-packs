@@ -17,6 +17,14 @@ $screensafe check path/to/pack --seconds 600 --size 2304x1440
 $screensafe render path/to/pack --time 12 --size 1920x1080 --out path/to/pack/preview.png
 ```
 
+## ScreenSafe 0.6.0 features
+
+Use `format = 2` for a theme/custom color control and `colorize`; format 1 remains compatible with 0.4.8. Check the default and demanding settings in light and dark themes, preserving readable contrast. See the plugin's [format guide](https://github.com/jeremydixon22/omarchy-screensafe/blob/main/docs/PACKS.md) and built-in packs for examples.
+
+Rendering optimizations are automatic. Optional prepared playback and the information overlay are user settings, not pack assets. A prepared loop repeats a 16–32 second segment, is built only on external power, and must pass local output/profile checks. Do not include cached clips, approval records, native helpers or author-side compiler scripts. Keep the pack efficient live too; no particular cache saving is promised for a community pack.
+
+The built-in Videos player supports personal `.ssv` media, but this catalog does not yet verify media-dependent layouts or accept video archives. Its pinned static renderer does not exercise the separate video broker. Such listings need explicit fixtures, codec-boundary checks and media-rights review before support can be added. Procedural/vector/image/font submissions remain the supported scope.
+
 ## 2. Publish it
 
 Put the pack in a public GitHub repository you control: a repository of its own, a theme's `screensafe/` folder, or a
@@ -31,6 +39,8 @@ folder among others. At the commit you submit, the pack's folder holds:
 Strip metadata from images before you commit them.
 
 ## 3. Add its entry
+
+The checker also loads format 1 packs with the pinned 0.4.8 renderer to verify the advertised minimum. Use format 2 for later features. Set `format` to the pack's own: `1`, or `2` for `color` settings or `colorize` in ScreenSafe 0.6.0. Its page and the gallery show the ScreenSafe it needs from that.
 
 Fork this repository, add your `[[pack]]` to `packs.toml` in order of `id` (the example at the top shows every field),
 and run:
